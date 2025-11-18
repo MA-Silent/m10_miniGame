@@ -9,14 +9,25 @@ let gridArray = [
   ['#','#','#','#','#','#','6'],
 ];
 
+function handleClick(rowIndex, columnIndex){
+  gridArray[r][c] = 'X';
+  render();
+}
+
 function render(){
-  gridArray.map((row)=>{
-    row.map((item)=>{
+  document.querySelector('#app').innerHTML = '';
+
+  gridArray.map((row, r)=>{
+    row.map((item, c)=>{
       const element = document.createElement('button');
       element.style.width = 'fit';
       element.innerHTML = `${item}`
+
+      element.onclick = () => {handleClick(r,c)};
 
       document.querySelector('#app').appendChild(element);
     })
   })
 }
+
+render();
