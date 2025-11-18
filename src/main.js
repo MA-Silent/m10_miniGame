@@ -10,7 +10,7 @@ let gridArray = [
 ];
 
 function handleClick(rowIndex, columnIndex){
-  gridArray[r][c] = 'X';
+  gridArray[rowIndex][columnIndex] = 'X';
   render();
 }
 
