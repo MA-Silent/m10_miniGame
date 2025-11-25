@@ -8,20 +8,32 @@ if($connection->connect_error){
     die("Connection failed: $connection->connect_error");
 }
 
+
 switch ($method) {
     case "POST":
-        echo handlePost();
+        echo var_dump(handlePost());
         break;
 };
 
 function handlePost() {
+    global $connection;
     $body = json_decode(file_get_contents('php://input'));
 
+
     if( isset($body->gameId) && isset($body->xScore) && isset($body->yScore) ) {
+        $tables = $connection->query("SHOW TABLES LIKE 'scores'");
 
+        if($tables->num_rows == 0){
+            $createTableSql = "CREATE TABLE scores ( gameId CHAR(36) NOT NULL, xScore INT NOT NULL, yScore INT NOT NULL, PRIMARY KEY (gameId))";
+        }
 
+        if($connection->query($createTableSql) === TRUE){
+            echo "table created";
+        } else {
+            echo "failed to create table: $connection->error";
+        }
 
-        return $body->gameId;
+        return $connection->query("SHOW TABLES LIKE 'scores'");
     }
 
     return null;
