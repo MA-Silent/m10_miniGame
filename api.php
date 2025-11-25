@@ -21,20 +21,24 @@ function handlePost() {
 
 
     if( isset($body->gameId) && isset($body->xScore) && isset($body->yScore) ) {
-        $tables = $connection->query("SHOW TABLES LIKE 'scores'");
-
-        if($tables->num_rows == 0){
-            $createTableSql = "CREATE TABLE scores ( gameId CHAR(36) NOT NULL, xScore INT NOT NULL, yScore INT NOT NULL, PRIMARY KEY (gameId))";
-        }
-
-        if($connection->query($createTableSql) === TRUE){
-            echo "table created";
-        } else {
-            echo "failed to create table: $connection->error";
-        }
-
-        return $connection->query("SHOW TABLES LIKE 'scores'");
+        checkTable($connection);
     }
 
     return null;
+}
+
+function checkTable(mysqli $connection): bool|mysqli_result {
+    $tables = $connection->query("SHOW TABLES LIKE 'scores'");
+
+    if($tables->num_rows == 0){
+        $createTableSql = "CREATE TABLE scores ( gameId CHAR(36) NOT NULL, xScore INT NOT NULL, yScore INT NOT NULL, PRIMARY KEY (gameId))";
+    }
+
+    if($connection->query($createTableSql) === TRUE){
+        echo "table created";
+    } else {
+        echo "failed to create table: $connection->error";
+    }
+
+    return $connection->query("SHOW TABLES LIKE 'scores'");
 }
