@@ -8,6 +8,12 @@ let gridArray = [
 ];
 
 let player = 'X';
+let gameId = crypto.randomUUID();
+
+document.querySelector('#gameIdText').innerText = gameId;
+
+let xScore = 0;
+let yScore = 0;
 
 function handleClick(rowIndex, columnIndex){
   gridArray[rowIndex][columnIndex] = `${player}`;
@@ -17,7 +23,37 @@ function handleClick(rowIndex, columnIndex){
   const winner = checkWinner(gridArray);
 
   if(winner != null){
-    document.querySelector('#app').innerHTML = `${winner} wins!`
+    const container = document.createElement('div');
+
+    const restartButton = document.createElement('button');
+    restartButton.innerText = 'Restart'
+    restartButton.onclick = () => {
+      gridArray = [
+        ['#','#','#','#','#','#','#'],
+        ['#','#','#','#','#','#','#'],
+        ['#','#','#','#','#','#','#'],
+        ['#','#','#','#','#','#','#'],
+        ['#','#','#','#','#','#','#'],
+        ['#','#','#','#','#','#','#'],
+      ];
+      render();
+    }
+
+    container.innerHTML = `${winner} wins!`
+    container.appendChild(restartButton);
+
+    container.classList.add('container');
+
+    document.querySelector('#game').innerHTML = '';
+    document.querySelector('#win').innerHTML = '';
+    document.querySelector('#win').appendChild(container);
+
+
+    if (winner == 'X'){
+      xScore++;
+    } else {
+      yScore++;
+    }
   }
 }
 
@@ -68,7 +104,8 @@ function checkWinner(grid) {
 // END AI GENERATED
 
 function render(){
-  document.querySelector('#app').innerHTML = '';
+  document.querySelector('#game').innerHTML = '';
+  document.querySelector('#win').innerHTML = '';
 
   gridArray.map((row, r)=>{
     row.map((item, c)=>{
@@ -82,9 +119,20 @@ function render(){
 
       element.onclick = () => {handleClick(r,c)};
 
-      document.querySelector('#app').appendChild(element);
+      document.querySelector('#game').appendChild(element);
     })
   })
+
+  document.querySelector('#score').innerHTML = ''
+
+  const scoreX = document.createElement('p');
+  const scoreY = document.createElement('p');
+
+  scoreY.innerHTML = `O: ${yScore}`
+  scoreX.innerHTML = `X: ${xScore}`
+
+  document.querySelector('#score').appendChild(scoreX);
+  document.querySelector('#score').appendChild(scoreY)
 }
 
 render();
