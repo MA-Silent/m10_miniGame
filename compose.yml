@@ -6,6 +6,7 @@ services:
     environment:
       - MYSQL_ROOT_PASSWORD=password
       - MYSQL_DATABASE=api
+
   phpmyadmin:
     image: phpmyadmin
     ports:
