@@ -1,10 +1,10 @@
 let gridArray = [
-  ['#','#','#','#','#','#','#'],
-  ['#','#','#','#','#','#','#'],
-  ['#','#','#','#','#','#','#'],
-  ['#','#','#','#','#','#','#'],
-  ['#','#','#','#','#','#','#'],
-  ['#','#','#','#','#','#','#'],
+  ['#', '#', '#', '#', '#', '#', '#'],
+  ['#', '#', '#', '#', '#', '#', '#'],
+  ['#', '#', '#', '#', '#', '#', '#'],
+  ['#', '#', '#', '#', '#', '#', '#'],
+  ['#', '#', '#', '#', '#', '#', '#'],
+  ['#', '#', '#', '#', '#', '#', '#'],
 ];
 
 let player = 'X';
@@ -15,26 +15,33 @@ document.querySelector('#gameIdText').innerText = gameId;
 let xScore = 0;
 let yScore = 0;
 
-function handleClick(rowIndex, columnIndex){
-  gridArray[rowIndex][columnIndex] = `${player}`;
+
+
+function handleClick(rowIndex, columnIndex) {
+
+  if (gridArray[rowIndex][columnIndex] !== '#') return;
+
+  gridArray[rowIndex][columnIndex] = player;
+
+  player = player === 'X' ? 'O' : 'X';
+
   render();
-  player = player == 'X' ? 'O' : 'X';
 
   const winner = checkWinner(gridArray);
 
-  if(winner != null){
+  if (winner != null) {
     const container = document.createElement('div');
 
     const restartButton = document.createElement('button');
     restartButton.innerText = 'Restart'
     restartButton.onclick = () => {
       gridArray = [
-        ['#','#','#','#','#','#','#'],
-        ['#','#','#','#','#','#','#'],
-        ['#','#','#','#','#','#','#'],
-        ['#','#','#','#','#','#','#'],
-        ['#','#','#','#','#','#','#'],
-        ['#','#','#','#','#','#','#'],
+        ['#', '#', '#', '#', '#', '#', '#'],
+        ['#', '#', '#', '#', '#', '#', '#'],
+        ['#', '#', '#', '#', '#', '#', '#'],
+        ['#', '#', '#', '#', '#', '#', '#'],
+        ['#', '#', '#', '#', '#', '#', '#'],
+        ['#', '#', '#', '#', '#', '#', '#'],
       ];
       render();
     }
@@ -49,15 +56,13 @@ function handleClick(rowIndex, columnIndex){
     document.querySelector('#win').appendChild(container);
 
 
-    if (winner == 'X'){
+    if (winner == 'X') {
       xScore++;
     } else {
       yScore++;
     }
   }
 }
-
-// AI GENERATED
 
 function checkWinner(grid) {
   const rows = grid.length;
@@ -103,21 +108,21 @@ function checkWinner(grid) {
 
 // END AI GENERATED
 
-function render(){
+function render() {
   document.querySelector('#game').innerHTML = '';
   document.querySelector('#win').innerHTML = '';
 
-  gridArray.map((row, r)=>{
-    row.map((item, c)=>{
+  gridArray.map((row, r) => {
+    row.map((item, c) => {
       const element = document.createElement('button');
       element.style.width = 'fit';
       element.innerHTML = `${item}`
 
-      if(element.innerHTML != '#'){
+      if (element.innerHTML != '#') {
         element.disabled = true;
       }
 
-      element.onclick = () => {handleClick(r,c)};
+      element.onclick = () => { handleClick(r, c) };
 
       document.querySelector('#game').appendChild(element);
     })
@@ -130,6 +135,12 @@ function render(){
 
   scoreY.innerHTML = `O: ${yScore}`
   scoreX.innerHTML = `X: ${xScore}`
+
+  if (player === 'X') {
+    scoreX.classList.add('active-player-red');
+  } else {
+    scoreY.classList.add('active-player-yellow');
+  }
 
   document.querySelector('#score').appendChild(scoreX);
   document.querySelector('#score').appendChild(scoreY)
