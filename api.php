@@ -16,7 +16,7 @@ switch ($method) {
         echo handlePost();
         break;
     case "GET":
-        echo handleGET();
+        echo handleGET($connection);
 };
 
 function handlePost() {
@@ -56,7 +56,6 @@ function checkTable(mysqli $connection, string $table): bool {
 
 function upsert(string $gameId, int $xScore, int $yScore ){
     global $connection;
-
     if(checkTable($connection, 'api')){
         $result = $connection->query('SHOW TABLES IN api');
         $tables = $result->fetch_all();
@@ -92,8 +91,18 @@ function upsert(string $gameId, int $xScore, int $yScore ){
     return null;
 }
 
-function handleGET() {
-    global $connection;
+function handleGET(mysqli $connection): string {
+
+    $gameId = $_GET['gameid'];
+
+    if(isset($gameId)){
+
+        $prepare = $connection->prepare('SELECT * FROM `scores` WHERE `gameId` = ?');
+        $prepare->bind_param("s", $gameId);
+        $prepare->execute();
+
+        return json_encode($prepare->get_result()->fetch_all(MYSQLI_ASSOC));
+    }
 
     if(checkTable($connection, 'api')){
         $result = $connection->query('SHOW TABLES IN api');
